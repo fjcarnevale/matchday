@@ -8,7 +8,7 @@
 {% autoescape true %}
 {% for league in leagues %}
 <h2>
-  <a href='/league?name={{league.name}}'>{{ league.name }}</a>
+  <a href='/leagueinfo?league_key={{league.key.urlsafe()}}'>{{ league.name }}</a>
 </h2>
 {% endfor %}
 {% endautoescape %}

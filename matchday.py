@@ -3,7 +3,7 @@ import jinja2
 import os
 
 from webapp2_extras import sessions
-
+from google.appengine.ext import ndb
 from models import League
 
 config = {}
@@ -49,15 +49,32 @@ class CreateLeague(BaseHandler):
 
     self.response.write("Created league %s" % league.name)
 
-    leagues = League.get_leagues()
+class CreateTeam(BaseHandler):
+  def get(self):
+    league_key = ndb.Key(urlsafe = self.request.get("league_key"))
+    league = league_key.get()
 
-    for l in leagues:
-      print l
+    league.add_new_team(self.request.get("team_name"))
+
+    self.redirect("/leagueinfo?league_key="+self.request.get("league_key"))
+  
+class LeagueInfo(BaseHandler):
+  def get(self):
+    league_key = ndb.Key(urlsafe = self.request.get("league_key"))
+    league = league_key.get()
+
+    teams = [team_key.get() for team_key in league.teams]
+
+    template = JINJA_ENVIRONMENT.get_template('leagueinfo.html')
+    self.response.write(template.render({"league":league,"teams":teams}))
+
 
 # Path mappings
 application = webapp2.WSGIApplication([
   ('/', Index),
-  ('/createleague', CreateLeague)
+  ('/createleague', CreateLeague),
+  ('/createteam'  , CreateTeam),
+  ('/leagueinfo'  , LeagueInfo)
 ], config=config, debug=True)
 
 
