@@ -1,7 +1,17 @@
 <html>
 <body>
 
-<h3>Welcome to Matchday!</h3>
+<center>
+	<h1>Welcome to Matchday!</h1>
+</center>
+
+{% autoescape true %}
+{% for league in leagues %}
+<h2>
+  <a href='/league?name={{league.name}}'>{{ league.name }}</a>
+</h2>
+{% endfor %}
+{% endautoescape %}
 
 </body>
 </html>

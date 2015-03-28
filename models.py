@@ -17,6 +17,13 @@ class League(ndb.Model):
   def get_leagues(cls):
     return cls.query()
 
+  @staticmethod
+  def new_league(name):
+    league = League()
+    league.populate(name=name)
+    league.put()
+    return league
+
 class Team(ndb.Model):
   name = ndb.StringProperty()
   league = ndb.KeyProperty()
@@ -26,6 +33,7 @@ class Team(ndb.Model):
   def new_team(name, league):
     team = Team()
     team.populate(name = name, league = league.key)
+    team.put()
     return team
 
 class Match(ndb.Model):
@@ -33,5 +41,12 @@ class Match(ndb.Model):
   teams = ndb.KeyProperty(repeated=True)
   league = ndb.KeyProperty()
 
+  @staticmethod
+  def new_match(date, teams, league):
 
+    match = Match()
+    match.populate(date=date, teams=teams, league=league)
+    match.put()
+
+    return match
 

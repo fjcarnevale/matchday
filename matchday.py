@@ -38,15 +38,14 @@ class BaseHandler(webapp2.RequestHandler):
 class Index(BaseHandler):
   """ Handles requests to the main page """
   def get(self):
+    leagues = League.get_leagues()
 
     template = JINJA_ENVIRONMENT.get_template('index.html')
-    self.response.write(template.render())
+    self.response.write(template.render({"leagues":leagues}))
 
 class CreateLeague(BaseHandler):
   def get(self):
-    league = League()
-    league.name = self.request.get("name")
-    league.put()
+    league = League.new_league(self.request.get("name"))
 
     self.response.write("Created league %s" % league.name)
 
@@ -57,7 +56,8 @@ class CreateLeague(BaseHandler):
 
 # Path mappings
 application = webapp2.WSGIApplication([
-  ('/', CreateLeague),
+  ('/', Index),
+  ('/createleague', CreateLeague)
 ], config=config, debug=True)
 
 
