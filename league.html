@@ -1,0 +1,18 @@
+<html>
+<body>
+
+<center>
+	<h1>{{ league.name }}</h1>
+</center
+
+{% autoescape true %}
+{% for team in teams %}
+<h2>
+  <a href='/league?name={{league.name}}'>{{ league.name }}</a>
+</h2>
+{% endfor %}
+{% endautoescape %}
+
+</body>
+</html>
+
